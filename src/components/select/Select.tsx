@@ -22,28 +22,29 @@ type SelectProps = {
 
 export const Select = (props: SelectProps) => {
 	const { options, placeholder, selected, onChange, onClose, title } = props;
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isOpenState, setIsOpenState] = useState<boolean>(false);
 	const rootRef = useRef<HTMLDivElement>(null);
 	const placeholderRef = useRef<HTMLDivElement>(null);
 
 	useOutsideClickClose({
-		isOpen,
+		isOpenState,
 		rootRef,
 		onClose,
-		onChange: setIsOpen,
+		onChange: setIsOpenState,
 	});
 
 	useEnterSubmit({
 		placeholderRef,
-		onChange: setIsOpen,
+		onChange: setIsOpenState,
 	});
 
 	const handleOptionClick = (option: OptionType) => {
-		setIsOpen(false);
+		setIsOpenState(false);
 		onChange?.(option);
+		console.log("клик!")
 	};
 	const handlePlaceHolderClick: MouseEventHandler<HTMLDivElement> = () => {
-		setIsOpen((isOpen) => !isOpen);
+		setIsOpenState((isOpenState) => !isOpenState);
 	};
 
 	return (
@@ -58,12 +59,12 @@ export const Select = (props: SelectProps) => {
 			<div
 				className={styles.selectWrapper}
 				ref={rootRef}
-				data-is-active={isOpen}
+				data-is-active={isOpenState}
 				data-testid='selectWrapper'>
 				<img
 					src={arrowDown}
 					alt='иконка стрелочки'
-					className={clsx(styles.arrow, { [styles.arrow_open]: isOpen })}
+					className={clsx(styles.arrow, { [styles.arrow_open]: isOpenState })}
 				/>
 				<div
 					className={clsx(
@@ -85,7 +86,7 @@ export const Select = (props: SelectProps) => {
 						{selected?.title || placeholder}
 					</Text>
 				</div>
-				{isOpen && (
+				{isOpenState && (
 					<ul className={styles.select} data-testid='selectDropdown'>
 						{options
 							.filter((option) => selected?.value !== option.value)
