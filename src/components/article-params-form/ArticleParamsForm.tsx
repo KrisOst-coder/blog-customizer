@@ -24,7 +24,7 @@ type ArticleParamsFormProps = {
 export const ArticleParamsForm = ({articleState, setArticleState}: ArticleParamsFormProps) => {
 	const rootRef = useRef<HTMLDivElement>(null);
 	// для хранения состояний
-	const [isOpenState, setIsOpenState] = useState<boolean>(false);
+	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 	const [fontColorState, setFontColorState] = useState<OptionType>(articleState.fontColor);
 	const [fontFamilyState, setFontFamilyState] = useState<OptionType>(articleState.fontFamilyOption);
 	const [contentWidthState, setContentWidthState] = useState<OptionType>(articleState.contentWidth);
@@ -33,10 +33,10 @@ export const ArticleParamsForm = ({articleState, setArticleState}: ArticleParams
 
 	// навешали на клик вне формы
 	useOutsideClickClose({
-		isOpenState,
+		isMenuOpen,
 		rootRef,
-		onClose: () => setIsOpenState(!isOpenState),
-		onChange: setIsOpenState
+		onClose: () => setIsMenuOpen(!isMenuOpen),
+		onChange: setIsMenuOpen
 	});
 
 	// хендлер для отправки формы
@@ -50,13 +50,13 @@ export const ArticleParamsForm = ({articleState, setArticleState}: ArticleParams
 			contentWidth: contentWidthState,
 			fontSizeOption: fontSizeOptionState,
 		})
-		setIsOpenState(false);
+		setIsMenuOpen(false);
 	}
 	// хендлер для обновления формы
 	const handleResetForm = () => {
 		setArticleState(defaultArticleState);
 		console.log("reset")
-		setIsOpenState(false);
+		setIsMenuOpen(false);
 		setFontColorState(defaultArticleState.fontColor);
 		setFontFamilyState(defaultArticleState.fontFamilyOption);
 		setContentWidthState(defaultArticleState.contentWidth);
@@ -67,8 +67,8 @@ export const ArticleParamsForm = ({articleState, setArticleState}: ArticleParams
 	// возвращаем разметку формы со всеми ее полями
 	return (
 		<div ref={rootRef}>
-			<ArrowButton isOpen={isOpenState} onClick={() => setIsOpenState(!isOpenState)}/>
-			<aside className={clsx(styles.container, isOpenState && styles.container_open)}>
+			<ArrowButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)}/>
+			<aside className={clsx(styles.container, isMenuOpen && styles.container_open)}>
 				<form className={styles.form} onSubmit={handleSubmitForm}>
 					<Text children='Задайте параметры' as='h1' size={31} weight={800} uppercase={true} dynamicLite={true}/>
 					<Select selected={fontFamilyState} options={fontFamilyOptions}
